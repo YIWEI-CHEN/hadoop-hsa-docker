@@ -1,0 +1,4 @@
+*.swp
+*.class
+*classes
+*hadoop-2.6.0.tar.gz
