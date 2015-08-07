@@ -50,8 +50,9 @@ EXPOSE 8030 8031 8032 8033 8040 8042 8088
 #jobhisotry ports
 EXPOSE 10020 19888 10033
 
-RUN mkdir -p /home/yiwei/mr-log
+RUN mkdir -p /home/yiwei/mr-log/KMeans
 ADD config/mr-profile.log /home/yiwei/mr-log/mr-profile.log
 RUN chown -R yiwei:hadoop /home/yiwei/mr-log
+
 #ENTRYPOINT ["/bin/bash", "/usr/local/hadoop/bin/start-hadoop.sh"]
 CMD ["/bin/bash"]

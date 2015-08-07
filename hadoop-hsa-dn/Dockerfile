@@ -39,5 +39,7 @@ EXPOSE 10020 19888 10033
 ADD config/service-start.sh $HADOOP_INSTALL/bin/service-start.sh
 RUN chmod 755 $HADOOP_INSTALL/bin/service-start.sh
 
+RUN mkdir -p /home/yiwei/mr-log/KMeans/
+RUN chown -R yiwei:hadoop /home/yiwei/mr-log
 ENTRYPOINT ["/bin/bash", "/usr/local/hadoop/bin/service-start.sh"]
 #ENTRYPOINT ["/usr/bin/svscan", "/etc/service/"]

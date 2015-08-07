@@ -1,0 +1,83 @@
+" for executing pathogen.vim
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+
+" personal editting preference
+set autoindent
+set smartindent
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set nu
+set bg=dark
+set incsearch
+set ignorecase
+
+" code folding
+set foldenable
+set foldmethod=syntax
+set foldcolumn=0
+nnoremap @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')
+
+" compile key
+
+"setting omncpp complete
+set nocp
+filetype plugin on
+let OmniCpp_MayCompleteScope = 1
+let OmniCpp_SelectFirstItem = 1
+
+"setting ctags
+map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+
+"setting cscope
+"map <F11> :!cscope -bR <CR>
+
+"setting nerdtree
+"autocmd vimenter * NERDTree
+map <C-n> : NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+"setting taglist
+filetype on
+map <C-m> : TlistToggle<CR>
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Use_Right_Window=1
+let Tlist_Show_One_File=1
+
+"setting vim color
+if filereadable(expand("~/.vimrc.mycolor"))
+  set t_Co=256
+  source ~/.vimrc.mycolor
+endif
+
+"setting python.vim
+set filetype=python
+au BufNewFile,BufRead *.py,*.pyw setf python
+
+"setting Syntastic
+let g:syntaslic_check_on = 1
+
+"setting tabe
+nmap <LEADER>te :tabedit<SPACE>
+"nmap <LEADER>tp :tabprev<CR>
+"nmap <LEADER>tn :tabnext<CR>
+
+"setting Pydiction
+"filetype plugin on
+"let g:pydiction_location = '/home/yiwei/.vim/bundle/pydiction/complete-dict'
+
+" Remap snipmate's trigger key from tab to <C-M>
+"imap <C-J> <Plug>snipMateNextOrTrigger
+"smap <C-J> <Plug>snipMateNextOrTrigger
+
+" openCL syntax highlight
+"syntax enable
+au BufNewFile,BufRead *.cl set filetype=opencl
+" hsail syntax highlight
+au BufNewFile,BufRead *.hsail set filetype=hsail
+
+" paste mode
+set pastetoggle=<LEADER>pt

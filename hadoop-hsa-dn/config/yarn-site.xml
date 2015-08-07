@@ -17,7 +17,7 @@
   <!-- the limitation of kinds of resource can be allocated for contaienrs -->
   <property>
     <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>4092</value>
+    <value>4096</value>
     <description>Amount of physical memory, in MB, that can be allocated for containers.</description>
   </property>
   <property>
