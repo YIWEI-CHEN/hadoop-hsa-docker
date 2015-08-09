@@ -8,18 +8,18 @@ fileName=$1
 while read LINE
 do
     HOST=`echo $LINE | cut -d' ' -f1`
-    SLAVEID=`echo $LINE | cut -d' ' -f2`
+    SLAVEID=`echo $LINE | cut -d' ' -f2 | cut -d'.' -f1` 
     DEVICETYPE=`echo $LINE | cut -d' ' -f3`
-#    echo $HOST $SLAVEID $DEVICETYPE
+    echo $HOST $SLAVEID $DEVICETYPE
     if [[ ${DEVICETYPE} == "HSA" ]]; then
         echo "ssh ${HOST} docker run --privileged --device /dev/kfd -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=HSA -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0"
-    #    ssh ${HOST} "docker run --privileged --device /dev/kfd -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=HSA -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0"
-    # have not prepared gpu container yet
+        ssh ${HOST} "docker run --privileged --device /dev/kfd -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=HSA -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0" &
+#    # have not prepared gpu container yet
     elif [[ ${DEVICETYPE} == "GPU" ]]; then
         echo "ssh ${HOST} docker run -e DISPLAY=unix:0.0 -v=/tmp/.X11-unix:/tmp/.X11-unix:rw --privileged -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=GPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-gpu-dn:1.0"
-        #ssh ${HOST} "docker run -e DISPLAY=unix:0.0 -v=/tmp/.X11-unix:/tmp/.X11-unix:rw --privileged -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=GPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-gpu-dn:1.0"
+        ssh ${HOST} "docker run -e DISPLAY=unix:0.0 -v=/tmp/.X11-unix:/tmp/.X11-unix:rw --privileged -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=GPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-gpu-dn:1.0" &
     else
         echo "ssh ${HOST} docker run -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=CPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0"
-    #    ssh ${HOST} "docker run -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=CPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0"
+        ssh ${HOST} "docker run -d -t --dns 127.0.0.1 -e NODE_TYPE=s -e DEVICE_TYPE=CPU -e JOIN_IP=${JOIN_IP} -P --name ${SLAVEID} -h ${SLAVEID}.mycorp.kom yiwei1012/hadoop-hsa-dn:1.0"&
     fi
 done < $fileName
