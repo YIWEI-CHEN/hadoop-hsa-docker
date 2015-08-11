@@ -15,15 +15,16 @@ else
     sed -i "${HSA}s/[0-9][0-9]*/0/" /usr/local/hadoop/etc/hadoop/yarn-site.xml
 fi
 
-slave_list=( "slave1", "slave2", "slave3", "slave4", "slave5" )
-if [[ ${slave_list[*]} =~ ${slave_name} ]]; then
-    exec /usr/bin/svscan /etc/service/ 
-    #echo "${slave_name} is in the list"
-else
-    exec /usr/bin/svscan /etc/service/ &
-    sleep 5
-    su yiwei -c "$HADOOP_INSTALL/bin/yarn nodemanager" &
-    su yiwei -c "$HADOOP_INSTALL/bin/hdfs datanode" 
-    #echo ${slave_name} "is not in the list"
-fi
+exec /usr/bin/svscan /etc/service/ 
+#slave_list=( "slave1", "slave2", "slave3", "slave4", "slave5" )
+#if [[ ${slave_list[*]} =~ ${slave_name} ]]; then
+#    exec /usr/bin/svscan /etc/service/ 
+#    #echo "${slave_name} is in the list"
+#else
+#    exec /usr/bin/svscan /etc/service/ &
+#    sleep 5
+#    su yiwei -c "$HADOOP_INSTALL/bin/yarn nodemanager" &
+#    su yiwei -c "$HADOOP_INSTALL/bin/hdfs datanode" 
+#    #echo ${slave_name} "is not in the list"
+#fi
 exec "$@"
