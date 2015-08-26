@@ -1,5 +1,5 @@
 #ssh pash4 /usr/local/hadoop/bin/hdfs datanode &
-JOIN_IP=###
+JOIN_IP=10.2.10.1
 #JOIN_IP=`ifconfig br0 | grep "inet addr" | sed 's/^.*inet addr://g' | cut -d ' ' -f1`
 #JOIN_IP=`ifconfig eth0 | grep "inet addr" | sed 's/^.*inet addr://g' | cut -d ' ' -f1`
 #echo $JOIN_IP
@@ -9,7 +9,17 @@ while read LINE
 do
     HOST=`echo $LINE | cut -d' ' -f1`
     SLAVEID=`echo $LINE | cut -d' ' -f2 | cut -d'.' -f1`
-    DEVICETYPE=`echo $LINE | cut -d' ' -f3`
+    DEVICE_TYPE=`echo $LINE | cut -d' ' -f3`
+    if [[ "$DEVICE_TYPE" == "HSA" ]]; then
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '30s/[0-9][0-9]*/0/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '35s/[0-9][0-9]*/1/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+    elif [[ '$DEVICE_TYPE' == "GPU" ]]; then
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '30s/[0-9][0-9]*/1/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '35s/[0-9][0-9]*/0/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+    else
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '30s/[0-9][0-9]*/0/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+        ssh yiwei@${SLAVEID}.mycorp.kom "sed -i '35s/[0-9][0-9]*/0/' /usr/local/hadoop/etc/hadoop/yarn-site.xml" &
+    fi
     ssh yiwei@${SLAVEID}.mycorp.kom "$HADOOP_INSTALL/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script $HADOOP_INSTALL/bin/hdfs start datanode" &
     ssh yiwei@${SLAVEID}.mycorp.kom "$HADOOP_INSTALL/sbin/yarn-daemon.sh --config $YARN_CONF_DIR start nodemanager" &
 #    echo $HOST $SLAVEID $DEVICETYPE
